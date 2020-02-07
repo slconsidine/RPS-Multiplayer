@@ -20,6 +20,9 @@
     <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/7.8.1/firebase-database.js"></script>
 
+    <!-- Firechat -->
+    <link rel="stylesheet" href="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.css" />
+    <script src="https://cdn.firebase.com/libs/firechat/3.0.1/firechat.min.js"></script>
 
     <!-- My CSS Styling -->
     <link rel="stylesheet" href="./assets/css/style.css">
@@ -45,26 +48,34 @@
         </div>
     </div>
 
-    <div id="player-1">
-        <button id="rock">Rock</button>
-        <button id="paper">Paper</button>
-        <button id="scissors">Scissors</button>
+    <div>Connected Users: <span id="connected-viewers"></span></div>
 
-        <div>Wins: <span id="wins1"></span></div>
-        <div>Losses: <span id="losses1"></span></div>
-        <div>Ties: <span id="ties1"></span></div>
+
+    <div id ="player1" class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Player 1</h5>
+          <button id="rock">Rock</button>
+          <button id="paper">Paper</button>
+          <button id="scissors">Scissors</button>
+
+          <div>Wins: <span id="wins1"></span></div>
+          <div>Losses: <span id="losses1"></span></div>
+          <div>Ties: <span id="ties1"></span></div>
+        </div>
     </div>
 
-    <div id="player-2">
-        <button id="rock2" data-value="rock">Rock</button>
-        <button id="paper2" data-value="paper">Paper</button>
-        <button id="scissors2" data-value="scissors">Scissors</button>
+    <div id ="player2" class="card" style="width: 18rem;">
+        <div class="card-body">
+          <h5 class="card-title">Player 2</h5>
+          <button id="rock2" data-value="rock">Rock</button>
+          <button id="paper2" data-value="paper">Paper</button>
+          <button id="scissors2" data-value="scissors">Scissors</button>
 
-        <div>Wins: <span id="wins2"></span></div>
-        <div>Losses: <span id="losses2"></span></div>
-        <div>Ties: <span id="ties2"></span></div>
+          <div>Wins: <span id="wins2"></span></div>
+          <div>Losses: <span id="losses2"></span></div>
+          <div>Ties: <span id="ties2"></span></div>
+        </div>
     </div>
-</div>
 
 </body>
 </html>
