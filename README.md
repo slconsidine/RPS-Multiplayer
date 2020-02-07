@@ -1,6 +1,8 @@
 # RPS-Multiplayer
 Homework 7
 
+https://slconsidine.github.io/RPS-Multiplayer/
+
 Instructions: 
     Create a game that suits this user story:
         Only two users can play at the same time.
