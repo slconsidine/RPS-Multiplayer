@@ -1,4 +1,19 @@
 $(document).ready(function() {
+
+var firebaseConfig = {
+    apiKey: "AIzaSyCDdFeSXitEqhtOg7hF41gonyk_gHD3HKU",
+    authDomain: "homework-7-36be5.firebaseapp.com",
+    databaseURL: "https://homework-7-36be5.firebaseio.com",
+    projectId: "homework-7-36be5",
+    storageBucket: "homework-7-36be5.appspot.com",
+    messagingSenderId: "1049536031769",
+    appId: "1:1049536031769:web:1c35ae6ce1b752eaa48e88"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+    
     // variables to hold each players choice
     var playerOneChoice;
     var playerTwoChoice;
@@ -45,9 +60,7 @@ $(document).ready(function() {
     
     var checkWinner = function() {
     // if statement confirms that each player has chosen a valid choice before running
-    // if ((playerOneChoice == "rock") || (playerOneChoice == "paper") || (playerOneChoice == "scissors") && (playerTwoChoice == "rock") || (playerTwoChoice == "paper") || (playerTwoChoice == "scissors")) {
         if ((playerOneChoice != null) && (playerTwoChoice != null)) {
-        console.log("players have picked")
             // if player 1 is the winner
             if ((playerOneChoice === "rock" && playerTwoChoice === "scissors") ||
             (playerOneChoice === "scissors" && playerTwoChoice === "paper") ||
@@ -59,6 +72,7 @@ $(document).ready(function() {
                 console.log("Player 2 Losses: " + losses2);
                 $("#losses2").text(losses2);
                 enableAll();
+                // clears users' choices
                 playerOneChoice = null;
                 playerTwoChoice = null;
             // if players are tied
@@ -70,6 +84,7 @@ $(document).ready(function() {
                 console.log("Player 2 Ties: " + ties2);
                 $("#ties2").text(ties2);
                 enableAll();
+                // clears users' choices
                 playerOneChoice = null;
                 playerTwoChoice = null;
             // if player 2 is the winner
@@ -81,6 +96,7 @@ $(document).ready(function() {
                 console.log("Player 2 Wins: " + wins2);
                 $("#wins2").text(wins2);
                 enableAll();
+                // clears users' choices
                 playerOneChoice = null;
                 playerTwoChoice = null;
             }
@@ -130,11 +146,4 @@ $(document).ready(function() {
         checkWinner();
     });
 
-
-
-
-
-
-
-
-})
+});
