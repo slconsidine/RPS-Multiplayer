@@ -53,26 +53,36 @@ $(document).ready(function() {
             (playerOneChoice === "scissors" && playerTwoChoice === "paper") ||
             (playerOneChoice === "paper" && playerTwoChoice === "rock")) {
                 wins1++;
-                console.log(wins1);
+                console.log("Player 1 Wins: " + wins1);
                 $("#wins1").text(wins1);
-                losses2--;
-                console.log(losses2);
+                losses2++;
+                console.log("Player 2 Losses: " + losses2);
                 $("#losses2").text(losses2);
                 enableAll();
+                playerOneChoice = null;
+                playerTwoChoice = null;
             // if players are tied
             } else if (playerOneChoice == playerTwoChoice) {
                 ties1++;
+                console.log("Player 1 Ties: " + ties1);
                 $("#ties1").text(ties1);
                 ties2++;
+                console.log("Player 2 Ties: " + ties2);
                 $("#ties2").text(ties2);
                 enableAll();
+                playerOneChoice = null;
+                playerTwoChoice = null;
             // if player 2 is the winner
             } else {
                 losses1++;
+                console.log("Player 1 Losses: " + losses1);
                 $("#losses1").text(losses1);
                 wins2++;
+                console.log("Player 2 Wins: " + wins2);
                 $("#wins2").text(wins2);
                 enableAll();
+                playerOneChoice = null;
+                playerTwoChoice = null;
             }
         }
     };
