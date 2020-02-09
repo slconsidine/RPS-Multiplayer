@@ -105,12 +105,34 @@ var firebaseConfig = {
         $("#scissors2").attr("disabled", false);
     };
     
+
     playerOneRef.on("value", function(snapshot) {
         playerOneChoice = snapshot.child("choice").val();
     });
     playerTwoRef.on("value", function(snapshot) {
         playerTwoChoice = snapshot.child("choice").val();
     });
+    
+
+    playerOneRef.on("value", function(snapshot) {
+        wins1 = snapshot.child("winCounter").val();
+    });
+    playerTwoRef.on("value", function(snapshot) {
+        wins2 = snapshot.child("winCounter").val();
+    });
+    playerOneRef.on("value", function(snapshot) {
+        losses1 = snapshot.child("lossesCounter").val();
+    });
+    playerTwoRef.on("value", function(snapshot) {
+        losses2 = snapshot.child("lossesCounter").val();
+    });
+    playerOneRef.on("value", function(snapshot) {
+        ties1 = snapshot.child("tiesCounter").val();
+    });
+    playerTwoRef.on("value", function(snapshot) {
+        ties2 = snapshot.child("tiesCounter").val();
+    });
+
     // function to see who wins each match
     var checkWinner = function() {
     // if statement confirms that each player has chosen a valid choice before running
@@ -121,10 +143,8 @@ var firebaseConfig = {
             (playerOneChoice === "paper" && playerTwoChoice === "rock")) {
                 wins1++;
                 console.log("Player 1 Wins: " + wins1);
-                $("#wins1").text(wins1);
                 losses2++;
                 console.log("Player 2 Losses: " + losses2);
-                $("#losses2").text(losses2);
                 enableAll();
                 playerOneRef.update({
                     choice: playerOneChoice,
@@ -138,6 +158,9 @@ var firebaseConfig = {
                     lossesCounter: losses2,
                     tiesCounter: ties2
                 });
+                $("#wins1").text(wins1);
+                $("#losses2").text(losses2);
+
                 // clears users' choices
                 playerOneChoice = "none";
                 playerOneRef.update({
@@ -151,10 +174,8 @@ var firebaseConfig = {
             } else if (playerOneChoice == playerTwoChoice) {
                 ties1++;
                 console.log("Player 1 Ties: " + ties1);
-                $("#ties1").text(ties1);
                 ties2++;
                 console.log("Player 2 Ties: " + ties2);
-                $("#ties2").text(ties2);
                 enableAll();
                 playerOneRef.update({
                     choice: playerOneChoice,
@@ -168,6 +189,8 @@ var firebaseConfig = {
                     lossesCounter: losses2,
                     tiesCounter: ties2
                 });
+                $("#ties1").text(ties1);
+                $("#ties2").text(ties2);
                 // clears users' choices
                 playerOneChoice = "none";
                 playerOneRef.update({
@@ -181,10 +204,8 @@ var firebaseConfig = {
             } else {
                 losses1++;
                 console.log("Player 1 Losses: " + losses1);
-                $("#losses1").text(losses1);
                 wins2++;
                 console.log("Player 2 Wins: " + wins2);
-                $("#wins2").text(wins2);
                 enableAll();
                 playerOneRef.update({
                     choice: playerOneChoice,
@@ -198,6 +219,8 @@ var firebaseConfig = {
                     lossesCounter: losses2,
                     tiesCounter: ties2
                 });
+                $("#losses1").text(losses1);
+                $("#wins2").text(wins2);
                 // clears users' choices
                 playerOneChoice = "none";
                 playerOneRef.update({
@@ -208,8 +231,25 @@ var firebaseConfig = {
                     choice: playerTwoChoice
                 });
             }
-        }
+       }
     };
+
+    // var notPicked = function() {
+    //     if ((playerOneChoice != "none") && (playerTwoChoice == "none")) {
+    //         playerOneNotEnabled();
+    //         console.log(playerOneChoice);
+    //         playerTwoRef.on("value", function(snapshot) {
+    //             playerTwoChoice = snapshot.child("choice").val();
+    //         });
+    //         checkWinner();
+    //     } else if ((playerOneChoice == "none") && (playerTwoChoice != "none")) {
+    //         playerTwoNotEnabled();
+    //         console.log(playerTwoChoice);
+    //     } else {
+    //         checkWinner();
+    //     }
+    // }; 
+
 
 
     // when player 1 clicks a button, their choice is logged by grabbing the id of the button
@@ -219,8 +259,7 @@ var firebaseConfig = {
         playerOneRef.update({
             choice: playerOneChoice
         });
-        playerOneNotEnabled();
-        console.log("Player 1:" + playerOneChoice);
+        // notPicked();
         checkWinner();
     });
     $("#paper").on("click", function() {
@@ -228,18 +267,16 @@ var firebaseConfig = {
         playerOneRef.update({
             choice: playerOneChoice
         });
-        playerOneNotEnabled();
-        console.log("Player 1:" + playerOneChoice);
         checkWinner();
+        // notPicked();
     });
     $("#scissors").on("click", function() {
         playerOneChoice = $(this).attr("id");
         playerOneRef.update({
             choice: playerOneChoice
         });
-        playerOneNotEnabled();
-        console.log("Player 1:" + playerOneChoice);
         checkWinner();
+        // notPicked();
     });
 
     // when player 2 clicks a button, their choice is logged by grabbing the data-value of the button
@@ -249,27 +286,24 @@ var firebaseConfig = {
         playerTwoRef.update({
             choice: playerTwoChoice
         });
-        playerTwoNotEnabled();
-        console.log("Player 2:" + playerTwoChoice);
         checkWinner();
+        // notPicked();
     });
     $("#paper2").on("click", function() {
         playerTwoChoice = $(this).attr("data-value");
         playerTwoRef.update({
             choice: playerTwoChoice
         });
-        playerTwoNotEnabled();
-        console.log("Player 2:" + playerTwoChoice);
         checkWinner();
+        // notPicked();
     });
     $("#scissors2").on("click", function() {
         playerTwoChoice = $(this).attr("data-value");
         playerTwoRef.update({
             choice: playerTwoChoice
         });
-        playerTwoNotEnabled();
-        console.log("Player 2:" + playerTwoChoice);
         checkWinner();
+        // notPicked();
     });
 
 
