@@ -14,38 +14,40 @@ var firebaseConfig = {
     firebase.initializeApp(firebaseConfig);
     var database = firebase.database();
 
-    // connectionsRef references a specific location in our database.
-    // All of our connections will be stored in this directory.
-    var connectionsRef = database.ref("/connections");
 
-    // '.info/connected' is a special location provided by Firebase that is updated
-    // every time the client's connection state changes.
-    // '.info/connected' is a boolean value, true if the client is connected and false if they are not.
+    // track connections on app
+    var connectionsRef = database.ref("/connections");
     var connectedRef = database.ref(".info/connected");
 
-    // When the client's connection state changes...
+    // event listener for value change, get snap at value change
     connectedRef.on("value", function(snap) {
-
-    // If they are connected..
         if (snap.val()) {
-            // Add user to the connections list.
             var con = connectionsRef.push(true);
-            // Remove user from the connection list when they disconnect.
             con.onDisconnect().remove();
+
+        // assign players when they are connected, assign var player-number
         }
     });
 
-    // When first loaded or when the connections list changes...
+    // display connected users
     connectionsRef.on("value", function(snap) {
-
-    // Display the viewer count in the html.
-    // The number of online users is the number of children in the connections list.
     $("#connected-viewers").text(snap.numChildren());
   });
-    
+
+  var playersRef = database.ref("/players");
+  var playerOneRef = database.ref("/players/PlayerOne");
+  var playerTwoRef = database.ref("/players/PlayerTwo");
+
+
+
+
+    // chat - array of objects, each object has name and content 
+      
+
+
     // variables to hold each players choice
-    var playerOneChoice;
-    var playerTwoChoice;
+    var playerOneChoice = "none";
+    var playerTwoChoice = "none";
 
     // counters for each players
     // show the initial counters in the HTML
@@ -62,6 +64,22 @@ var firebaseConfig = {
     $("#wins2").text(wins2);
     $("#losses2").text(losses2);
     $("#ties2").text(ties2);
+
+
+    // initialize firebase with each players initial values
+    playerOneRef.set({
+        choice: playerOneChoice,
+        winCounter: wins1,
+        lossesCounter: losses1,
+        tiesCounter: ties1
+    });
+    
+    playerTwoRef.set({
+        choice: playerTwoChoice,
+        winCounter: wins2,
+        lossesCounter: losses2,
+        tiesCounter: ties2
+    });
 
 
     // disables all options for each player so they can't be clicked again after a choice is selected
@@ -87,9 +105,16 @@ var firebaseConfig = {
         $("#scissors2").attr("disabled", false);
     };
     
+    playerOneRef.on("value", function(snapshot) {
+        playerOneChoice = snapshot.child("choice").val();
+    });
+    playerTwoRef.on("value", function(snapshot) {
+        playerTwoChoice = snapshot.child("choice").val();
+    });
+    // function to see who wins each match
     var checkWinner = function() {
     // if statement confirms that each player has chosen a valid choice before running
-        if ((playerOneChoice != null) && (playerTwoChoice != null)) {
+        if ((playerOneChoice != "none") && (playerTwoChoice != "none")) {
             // if player 1 is the winner
             if ((playerOneChoice === "rock" && playerTwoChoice === "scissors") ||
             (playerOneChoice === "scissors" && playerTwoChoice === "paper") ||
@@ -101,9 +126,27 @@ var firebaseConfig = {
                 console.log("Player 2 Losses: " + losses2);
                 $("#losses2").text(losses2);
                 enableAll();
+                playerOneRef.update({
+                    choice: playerOneChoice,
+                    winCounter: wins1,
+                    lossesCounter: losses1,
+                    tiesCounter: ties1
+                });
+                playerTwoRef.update({
+                    choice: playerTwoChoice,
+                    winCounter: wins2,
+                    lossesCounter: losses2,
+                    tiesCounter: ties2
+                });
                 // clears users' choices
-                playerOneChoice = null;
-                playerTwoChoice = null;
+                playerOneChoice = "none";
+                playerOneRef.update({
+                    choice: playerOneChoice
+                });
+                playerTwoChoice = "none";
+                playerTwoRef.update({
+                    choice: playerTwoChoice
+                });
             // if players are tied
             } else if (playerOneChoice == playerTwoChoice) {
                 ties1++;
@@ -113,9 +156,27 @@ var firebaseConfig = {
                 console.log("Player 2 Ties: " + ties2);
                 $("#ties2").text(ties2);
                 enableAll();
+                playerOneRef.update({
+                    choice: playerOneChoice,
+                    winCounter: wins1,
+                    lossesCounter: losses1,
+                    tiesCounter: ties1
+                });
+                playerTwoRef.update({
+                    choice: playerTwoChoice,
+                    winCounter: wins2,
+                    lossesCounter: losses2,
+                    tiesCounter: ties2
+                });
                 // clears users' choices
-                playerOneChoice = null;
-                playerTwoChoice = null;
+                playerOneChoice = "none";
+                playerOneRef.update({
+                    choice: playerOneChoice
+                });
+                playerTwoChoice = "none";
+                playerTwoRef.update({
+                    choice: playerTwoChoice
+                });
             // if player 2 is the winner
             } else {
                 losses1++;
@@ -125,9 +186,27 @@ var firebaseConfig = {
                 console.log("Player 2 Wins: " + wins2);
                 $("#wins2").text(wins2);
                 enableAll();
+                playerOneRef.update({
+                    choice: playerOneChoice,
+                    winCounter: wins1,
+                    lossesCounter: losses1,
+                    tiesCounter: ties1
+                });
+                playerTwoRef.update({
+                    choice: playerTwoChoice,
+                    winCounter: wins2,
+                    lossesCounter: losses2,
+                    tiesCounter: ties2
+                });
                 // clears users' choices
-                playerOneChoice = null;
-                playerTwoChoice = null;
+                playerOneChoice = "none";
+                playerOneRef.update({
+                    choice: playerOneChoice
+                });
+                playerTwoChoice = "none";
+                playerTwoRef.update({
+                    choice: playerTwoChoice
+                });
             }
         }
     };
@@ -137,18 +216,27 @@ var firebaseConfig = {
     // after something is clicked, all other buttons for that player are disabled
     $("#rock").on("click", function() {
         playerOneChoice = $(this).attr("id");
+        playerOneRef.update({
+            choice: playerOneChoice
+        });
         playerOneNotEnabled();
         console.log("Player 1:" + playerOneChoice);
         checkWinner();
     });
     $("#paper").on("click", function() {
         playerOneChoice = $(this).attr("id");
+        playerOneRef.update({
+            choice: playerOneChoice
+        });
         playerOneNotEnabled();
         console.log("Player 1:" + playerOneChoice);
         checkWinner();
     });
     $("#scissors").on("click", function() {
         playerOneChoice = $(this).attr("id");
+        playerOneRef.update({
+            choice: playerOneChoice
+        });
         playerOneNotEnabled();
         console.log("Player 1:" + playerOneChoice);
         checkWinner();
@@ -158,27 +246,31 @@ var firebaseConfig = {
     // after something is clicked, all other buttons for that player are disabled
     $("#rock2").on("click", function() {
         playerTwoChoice = $(this).attr("data-value");
+        playerTwoRef.update({
+            choice: playerTwoChoice
+        });
         playerTwoNotEnabled();
         console.log("Player 2:" + playerTwoChoice);
         checkWinner();
     });
     $("#paper2").on("click", function() {
         playerTwoChoice = $(this).attr("data-value");
+        playerTwoRef.update({
+            choice: playerTwoChoice
+        });
         playerTwoNotEnabled();
         console.log("Player 2:" + playerTwoChoice);
         checkWinner();
     });
     $("#scissors2").on("click", function() {
         playerTwoChoice = $(this).attr("data-value");
+        playerTwoRef.update({
+            choice: playerTwoChoice
+        });
         playerTwoNotEnabled();
         console.log("Player 2:" + playerTwoChoice);
         checkWinner();
     });
-
-
-
-
-
 
 
 
