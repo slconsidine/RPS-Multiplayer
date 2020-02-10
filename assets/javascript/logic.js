@@ -31,20 +31,31 @@ var firebaseConfig = {
 
     // display connected users
     connectionsRef.on("value", function(snap) {
-    $("#connected-viewers").text(snap.numChildren());
-  });
+        $("#connected-viewers").text(snap.numChildren());
+    });
 
-  var playersRef = database.ref("/players");
-  var playerOneRef = database.ref("/players/PlayerOne");
-  var playerTwoRef = database.ref("/players/PlayerTwo");
+    var player1 = false; //**
+    var player2 = false; //**
+    var whosTurn = 0; //** 
 
+    var playersRef = database.ref("/players");
+    var playerOneRef = database.ref("/players/PlayerOne");
+    var playerTwoRef = database.ref("/players/PlayerTwo");
+    var playerOneWinRef = database.ref("/players/PlayerOne/winCounter") //**
+    var playerTwoWinRef = database.ref("/players/PlayerTwo/winCounter") //**
+    var playerOneLoseRef = database.ref("/players/PlayerOne/lossesCounter") //**
+    var playerTwoLoseRef = database.ref("/players/PlayerTwo/lossesCounter") //**
+    var playerOneTieRef = database.ref("/players/PlayerOne/tiesCounter") //**
+    var playerTwoTieRef = database.ref("/players/PlayerTwo/tiesCounter") //**
 
-
+    playerOneRef.remove(); //**
+    playerTwoRef.remove(); //**
 
     // chat - array of objects, each object has name and content 
       
 
 
+    console.log(whosTurn);
     // variables to hold each players choice
     var playerOneChoice = "none";
     var playerTwoChoice = "none";
@@ -67,19 +78,20 @@ var firebaseConfig = {
 
 
     // initialize firebase with each players initial values
-    playerOneRef.set({
-        choice: playerOneChoice,
-        winCounter: wins1,
-        lossesCounter: losses1,
-        tiesCounter: ties1
-    });
+    //** commented out both playerOneRef and playerTwoRef
+    // playerOneRef.set({
+    //     choice: playerOneChoice,
+    //     winCounter: wins1,
+    //     lossesCounter: losses1,
+    //     tiesCounter: ties1
+    // });
     
-    playerTwoRef.set({
-        choice: playerTwoChoice,
-        winCounter: wins2,
-        lossesCounter: losses2,
-        tiesCounter: ties2
-    });
+    // playerTwoRef.set({
+    //     choice: playerTwoChoice,
+    //     winCounter: wins2,
+    //     lossesCounter: losses2,
+    //     tiesCounter: ties2
+    // });
 
 
     // disables all options for each player so they can't be clicked again after a choice is selected
@@ -90,11 +102,23 @@ var firebaseConfig = {
         $("#scissors").attr("disabled", true);
     };
 
+    var playerOneEnable = function() {
+        $("#rock").attr("disabled", false);
+        $("#paper").attr("disabled", false);
+        $("#scissors").attr("disabled", false);
+    }; //**
+
     var playerTwoNotEnabled = function() {
         $("#rock2").attr("disabled", true);
         $("#paper2").attr("disabled", true);
         $("#scissors2").attr("disabled", true);
     };
+
+    var playerTwoEnable = function() {
+        $("#rock2").attr("disabled", false);
+        $("#paper2").attr("disabled", false);
+        $("#scissors2").attr("disabled", false);
+    }; //**
 
     var enableAll = function() {
         $("#rock").attr("disabled", false);
@@ -104,34 +128,88 @@ var firebaseConfig = {
         $("#paper2").attr("disabled", false);
         $("#scissors2").attr("disabled", false);
     };
+
+    var disableAll = function() {
+        playerOneNotEnabled();
+        playerTwoNotEnabled();
+    }; //**
     
+
+    playersRef.on("value", function(snapshot) {
+        if (whosTurn === 1) {
+            playerOneEnable();
+        } else if (whosTurn === 2) {
+            playerTwoEnable();
+        }
+        else {
+            disableAll();
+        }
+    }); //**
+
+    playersRef.on("value", function(snapshot) {
+        if (snapshot.child("PlayerOne").exists()) {
+            player1 = true;
+            console.log("Player1 is ready to play");
+        } else {
+            console.log("Player1 is not ready to play");
+        }
+    }); //**
+
+    playersRef.on("value", function(snapshot) {
+        if (snapshot.child("PlayerTwo").exists()) {
+            player2 = true;
+            console.log("Player2 is ready to play");
+        } else {
+            console.log("Player2 is not ready to play");
+        }
+    }); //**
+
+    // playersRef.on("value", function(snapshot) {
+    //     if ((player1 == true) && (player2 == true)) {
+    //         enableAll();
+    //         whosTurn = 1;
+    //         playersRef.update({
+    //             whosTurn: whosTurn
+    //         });
+    //     }
+    // }); FROM JEFFREY CHECK THIS //**
 
     playerOneRef.on("value", function(snapshot) {
         playerOneChoice = snapshot.child("choice").val();
-    });
+        whosTurn = 2;
+        playersRef.update({
+            whosTurn: whosTurn
+        });
+    }); //** added whosTurn and playersRef update
+
     playerTwoRef.on("value", function(snapshot) {
         playerTwoChoice = snapshot.child("choice").val();
-    });
+        whosTurn = 1;
+        playersRef.update({
+            whosTurn: whosTurn
+        });
+    }); //** added whosTurn and playersRef update
     
 
-    playerOneRef.on("value", function(snapshot) {
-        wins1 = snapshot.child("winCounter").val();
-    });
-    playerTwoRef.on("value", function(snapshot) {
-        wins2 = snapshot.child("winCounter").val();
-    });
-    playerOneRef.on("value", function(snapshot) {
-        losses1 = snapshot.child("lossesCounter").val();
-    });
-    playerTwoRef.on("value", function(snapshot) {
-        losses2 = snapshot.child("lossesCounter").val();
-    });
-    playerOneRef.on("value", function(snapshot) {
-        ties1 = snapshot.child("tiesCounter").val();
-    });
-    playerTwoRef.on("value", function(snapshot) {
-        ties2 = snapshot.child("tiesCounter").val();
-    });
+    // playerOneRef.on("value", function(snapshot) {
+    //     wins1 = snapshot.child("winCounter").val();
+    // });
+    // playerTwoRef.on("value", function(snapshot) {
+    //     wins2 = snapshot.child("winCounter").val();
+    // });
+    // playerOneRef.on("value", function(snapshot) {
+    //     losses1 = snapshot.child("lossesCounter").val();
+    // });
+    // playerTwoRef.on("value", function(snapshot) {
+    //     losses2 = snapshot.child("lossesCounter").val();
+    // });
+    // playerOneRef.on("value", function(snapshot) {
+    //     ties1 = snapshot.child("tiesCounter").val();
+    // });
+    // playerTwoRef.on("value", function(snapshot) {
+    //     ties2 = snapshot.child("tiesCounter").val();
+    // }); //** commented out from Jeffrey's code
+
 
     // function to see who wins each match
     var checkWinner = function() {
@@ -306,6 +384,21 @@ var firebaseConfig = {
         // notPicked();
     });
 
-
+    $("#player1").on("click", function() {
+        playerOneRef.set({
+            choice: "none",
+            winCounter: 0,
+            lossesCounter: 0,
+            tiesCounter: 0
+        });
+    });
+    $("#player2").on("click", function() {
+        playerTwoRef.set({
+            choice: "none",
+            winCounter: 0,
+            lossesCounter: 0,
+            tiesCounter: 0
+        });
+    });
 
 });
