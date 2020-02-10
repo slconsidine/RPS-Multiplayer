@@ -136,13 +136,57 @@ var firebaseConfig = {
         }
     });
 
-    // when player's choice is changed, log this as the new choice in the database
+    var player1Check = ""; 
+    var player2Check = "";
+
+    // when player1's choice is changed, log this as the new choice in the database
+    // re-logs the counters for player 1 so that they are updated even if checkWinner function wasn't run on that page
     playerOneRef.on("value", function(snapshot) {
         playerOneChoice = snapshot.child("choice").val();
+        wins1 = snapshot.child("winCounter").val()
+        $("#wins1").text(wins1);
+        losses1 = snapshot.child("lossesCounter").val();
+        $("#losses1").text(losses1);
+        ties1 = snapshot.child("tiesCounter").val();
+        $("#ties1").text(ties1);
     });
+    // when player2's choice is changed, log this as the new choice in the database
+    // re-logs the counters for player 2 so that they are updated even if checkWinner function wasn't run on that page
     playerTwoRef.on("value", function(snapshot) {
         playerTwoChoice = snapshot.child("choice").val();
+        wins2 = snapshot.child("winCounter").val()
+        $("#wins2").text(wins2);
+        losses2 = snapshot.child("lossesCounter").val();
+        $("#losses1").text(losses2);
+        ties2 = snapshot.child("tiesCounter").val();
+        $("#ties2").text(ties2);
     });
+    // grabs the turn value
+    // disables the player 1/2 button if it has already been selected
+    playersRef.on("value", function(snapshot) {
+        whosTurn = snapshot.child("turn").val();
+        if (snapshot.child("PlayerOne").exists()) {
+            player1Check = "exists";
+            $("#player1").attr("disabled", true);
+        } else {
+            player1Check = "does not exist";
+            $("#player1").attr("disabled", false);
+        };
+        if (snapshot.child("PlayerTwo").exists()) {
+            player2Check = "exists";
+            $("#player2").attr("disabled", true);
+        } else {
+            player2Check = "does not exist";
+            $("#player2").attr("disabled", false);
+        };
+        // if (whosTurn = 1) {
+        //     playerTwoNotEnabled();
+        // }
+        // else if (whosTurn = 2) {
+        //     playerOneNotEnabled();
+        // }
+    });
+
 
     // function to see who wins each match
     var checkWinner = function() {
@@ -256,17 +300,6 @@ var firebaseConfig = {
        }
     };
 
-    var update = function() {
-        if((playerOneChoice != "none") && (playerTwoChoice == "none")) {
-            $("#wins1").text(wins1);
-            $("#losses2").text(losses2);
-            $("#ties1").text(ties1);
-            $("#ties2").text(ties2);
-            $("#losses1").text(losses1);
-            $("#wins2").text(wins2);
-        }
-    };
-
     // player 1 buttons are clicked
     $("#rock").on("click", function() {
         // when player 1 clicks a button, their choice is logged by grabbing the id of the button
@@ -280,7 +313,6 @@ var firebaseConfig = {
             turn: whosTurn
         });
         checkWinner();
-        update();
     });
     $("#paper").on("click", function() {
         // when player 1 clicks a button, their choice is logged by grabbing the id of the button
@@ -294,7 +326,6 @@ var firebaseConfig = {
             turn: whosTurn
         });
         checkWinner();
-        update();
     });
     $("#scissors").on("click", function() {
         // when player 1 clicks a button, their choice is logged by grabbing the id of the button
@@ -308,8 +339,8 @@ var firebaseConfig = {
             turn: whosTurn
         });
         checkWinner();
-        update();
     });
+
 
     // player 2 buttons are clicked
     $("#rock2").on("click", function() {
@@ -384,6 +415,22 @@ var firebaseConfig = {
 
 
 
-// needs to update both browsers after check winner runs so that all counters are correct, not just player 2
-    // this is not updated because it is in the checkWinner function 
-    // checkWinner function is not running on the player1 page because both players have not picked
+//if turn matters:
+
+// update the event listener so that it disables buttons for whichever player is not active
+// put this in the button click for the choice
+        // if (whosTurn == 1) {
+        //     alert("not your turn yet");
+        // } else {
+        //     // when player 2 clicks a button, their choice is logged by grabbing the data-value of the button
+        //     playerTwoChoice = $(this).attr("data-value");
+        //     playerTwoRef.update({
+        //         choice: playerTwoChoice
+        //     });
+        //     // the turn number is updated in the database
+        //     whosTurn=1;
+        //     playersRef.update({
+        //         turn: whosTurn
+        //     });
+        //     checkWinner();
+        // };
