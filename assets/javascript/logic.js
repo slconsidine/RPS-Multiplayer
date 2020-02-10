@@ -256,6 +256,17 @@ var firebaseConfig = {
        }
     };
 
+    var update = function() {
+        if((playerOneChoice != "none") && (playerTwoChoice == "none")) {
+            $("#wins1").text(wins1);
+            $("#losses2").text(losses2);
+            $("#ties1").text(ties1);
+            $("#ties2").text(ties2);
+            $("#losses1").text(losses1);
+            $("#wins2").text(wins2);
+        }
+    };
+
     // player 1 buttons are clicked
     $("#rock").on("click", function() {
         // when player 1 clicks a button, their choice is logged by grabbing the id of the button
@@ -269,6 +280,7 @@ var firebaseConfig = {
             turn: whosTurn
         });
         checkWinner();
+        update();
     });
     $("#paper").on("click", function() {
         // when player 1 clicks a button, their choice is logged by grabbing the id of the button
@@ -282,6 +294,7 @@ var firebaseConfig = {
             turn: whosTurn
         });
         checkWinner();
+        update();
     });
     $("#scissors").on("click", function() {
         // when player 1 clicks a button, their choice is logged by grabbing the id of the button
@@ -295,6 +308,7 @@ var firebaseConfig = {
             turn: whosTurn
         });
         checkWinner();
+        update();
     });
 
     // player 2 buttons are clicked
@@ -347,6 +361,10 @@ var firebaseConfig = {
             lossesCounter: 0,
             tiesCounter: 0
         });
+        whosTurn = 1;
+        playersRef.update({
+            turn: whosTurn
+        });
     });
     $("#player2").on("click", function() {
         playerTwoEnable();
@@ -356,6 +374,16 @@ var firebaseConfig = {
             lossesCounter: 0,
             tiesCounter: 0
         });
+        whosTurn = 1;
+        playersRef.update({
+            turn: whosTurn
+        });
     });
-    
+
 });
+
+
+
+// needs to update both browsers after check winner runs so that all counters are correct, not just player 2
+    // this is not updated because it is in the checkWinner function 
+    // checkWinner function is not running on the player1 page because both players have not picked

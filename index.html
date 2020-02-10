@@ -34,9 +34,6 @@
 
 <body>
 
-  <button id="player1">Player1</button>
-  <button id="player2">Player2</button>
-
 <div class="container">
     <div class="jumbotron text-center">
         <h1>Rock Paper Scissors!!</h1>
@@ -51,10 +48,49 @@
         </div>
     </div>
 
-    <div>Connected Users: <span id="connected-viewers"></span></div>
+    <div class="text-center">Connected Users: <span id="connected-viewers"></span></div>
 
-
-    <div id ="player1" class="card" style="width: 18rem;">
+    <div class="grid">
+      <div class="row justify-content-center">
+        <div class="col-sm-6 justify-content-center">
+          <div class="text-center">
+            <button class="player" id="player1">Player1</button>
+          </div>
+          <div id ="player1" class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">Player 1</h5>
+              
+              <button id="rock">Rock</button>
+              <button id="paper">Paper</button>
+              <button id="scissors">Scissors</button>
+    
+              <div>Wins: <span id="wins1"></span></div>
+              <div>Losses: <span id="losses1"></span></div>
+              <div>Ties: <span id="ties1"></span></div>
+            </div>
+        </div>
+        </div>
+        <div class="col-sm-6 justify-content-center">
+          <div class="text-center">
+            <button class="player" id="player2">Player2</button>
+          </div>
+          <div id ="player2" class="card text-center">
+            <div class="card-body">
+              <h5 class="card-title">Player 2</h5>
+              
+              <button id="rock2" data-value="rock">Rock</button>
+              <button id="paper2" data-value="paper">Paper</button>
+              <button id="scissors2" data-value="scissors">Scissors</button>
+    
+              <div>Wins: <span id="wins2"></span></div>
+              <div>Losses: <span id="losses2"></span></div>
+              <div>Ties: <span id="ties2"></span></div>
+            </div>
+        </div>
+        </div>
+      </div>
+    </div>
+    <!-- <div id ="player1" class="card" style="width: 18rem;">
         <div class="card-body">
           <h5 class="card-title">Player 1</h5>
           
@@ -68,7 +104,7 @@
         </div>
     </div>
 
-    <div id ="player2" class="card" style="width: 18rem;">
+    <div id ="player2" class="card card2" style="width: 18rem;">
         <div class="card-body">
           <h5 class="card-title">Player 2</h5>
           
@@ -80,7 +116,8 @@
           <div>Losses: <span id="losses2"></span></div>
           <div>Ties: <span id="ties2"></span></div>
         </div>
-    </div>
+    </div> -->
+</div>
 
 </body>
 </html>
