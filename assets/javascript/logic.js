@@ -41,15 +41,9 @@ var firebaseConfig = {
     var playersRef = database.ref("/players");
     var playerOneRef = database.ref("/players/PlayerOne");
     var playerTwoRef = database.ref("/players/PlayerTwo");
-    // var playerOneWinRef = database.ref("/players/PlayerOne/winCounter") //**
-    // var playerTwoWinRef = database.ref("/players/PlayerTwo/winCounter") //**
-    // var playerOneLoseRef = database.ref("/players/PlayerOne/lossesCounter") //**
-    // var playerTwoLoseRef = database.ref("/players/PlayerTwo/lossesCounter") //**
-    // var playerOneTieRef = database.ref("/players/PlayerOne/tiesCounter") //**
-    // var playerTwoTieRef = database.ref("/players/PlayerTwo/tiesCounter") //**
 
-    playerOneRef.remove(); //**
-    playerTwoRef.remove(); //**
+    // playerOneRef.remove(); //**
+    // playerTwoRef.remove(); //**
 
     playersRef.set({
         turn: whosTurn
@@ -165,6 +159,16 @@ var firebaseConfig = {
     // disables the player 1/2 button if it has already been selected
     playersRef.on("value", function(snapshot) {
         whosTurn = snapshot.child("turn").val();
+        // if (whosTurn = 1) {
+        //     playerOneEnable();
+        //     playerTwoNotEnabled();
+        // } else if (whosTurn = 2) {
+        //     playerTwoEnable();
+        //     playerOneNotEnabled();
+        // } else {
+        //     playerOneNotEnabled();
+        //     playerTwoNotEnabled();
+        // }
         if (snapshot.child("PlayerOne").exists()) {
             player1Check = "exists";
             $("#player1").attr("disabled", true);
